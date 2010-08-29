@@ -10,14 +10,14 @@ automagically load regardless of the dependency structure?
 
 Wouldn't that be nice?  Well, now you can!
 
- <code>require 'require_all'</code>
+ <code>require 'magic_loader_'</code>
 
-You can use require_all in a multitude of different ways.
+You can use MagicLoader in a multitude of different ways.
 
 The easiest way to use require_all is to just point it at a directory
 containing a bunch of .rb files:
 
- <code>require_all 'lib'</code>
+ <code>MagicLoader.require_all 'lib'</code>
 
 This will find all the .rb files under the lib directory (including all 
 subdirectories as well) and load them.
@@ -28,38 +28,24 @@ first unresolvable NameError.
 
 You can also give it a glob, which will enumerate all the matching files: 
 
- <code>require_all 'lib/**/*.rb'</code>
+ <code>MagicLoader.require_all 'lib/**/*.rb'</code>
 
 It will also accept an array of files:
 
- <code>require_all Dir.glob("blah/**/*.rb").reject { |f| stupid_file? f }</code>
+ <code>MagicLoader.require_all Dir.glob("blah/**/*.rb").reject { |f| stupid_file? f }</code>
  
 Or if you want, just list the files directly as arguments:
 
- <code>require_all 'lib/a.rb', 'lib/b.rb', 'lib/c.rb', 'lib/d.rb'</code>
+ <code>MagicLoader.require_all 'lib/a.rb', 'lib/b.rb', 'lib/c.rb', 'lib/d.rb'</code>
 
-Still have the require File.dirname(__FILE__) blues?  The require_all gem also
-provides a require_rel statement which requires files to relative to the 
-current file.  So you can replace statements like:
+So what's the magic?
+--------------------
 
- <code>require File.dirname(__FILE__) + '/foobar'</code>
+MagicLoader is just a Ruby library, after all. There's no magic but what you
+don't understand.  I didn't invent the approach this gem uses.  It was 
+shamelessly stolen from Merb (which apparently stole it from elsewhere).
 
-with just a simple require_rel:
-
- <code>require_rel 'foobar'</code>
- 
-Even better, require_rel still has the full power of require_all, so you can
-use require_rel to load entire directories of code too.  If "foobar" is a
-directory this will load all the .rb files found under that directory with
-automagic dependency handling.
- 
-It's just that easy!  Code loading shouldn't be hard.
-
-Methodology
------------
-
-I didn't invent the approach this gem uses.  It was shamelessly stolen from
-Merb (which apparently stole it from elsewhere).  Here's how it works:  
+Here's how it works:  
 
 * Enumerate the files to be loaded
 * Try to load all of the files.  If we encounter a NameError loading a 
@@ -75,11 +61,11 @@ Questions? Comments? Concerns?
 
 You can reach the author on github or freenode: "tarcieri"
 
-Or by email: "tony@medioh.com":mailto:tony@medioh.com
+Or by email: [tony@medioh.com](mailto:tony@medioh.com)
 
 Got issues with require_all to report?  Post 'em here:
 
-"Github Tracker":http://github.com/tarcieri/require_all/issues
+[Github Tracker](http://github.com/tarcieri/require_all/issues)
 
 License
 -------

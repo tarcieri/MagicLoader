@@ -11,7 +11,7 @@ module MagicLoader
   # containing a bunch of .rb files.  These files can be nested under 
   # subdirectories as well:
   #
-  #  require_all 'lib'
+  #  MagicLoader.require_all 'lib'
   #
   # This will find all the .rb files under the lib directory and load them.
   # The proper order to load them in will be determined automatically.
@@ -21,15 +21,15 @@ module MagicLoader
   #
   # You can also give it a glob, which will enumerate all the matching files: 
   #
-  #  require_all 'lib/**/*.rb'
+  #  MagicLoader.require_all 'lib/**/*.rb'
   #
   # It will also accept an array of files:
   # 
-  #  require_all Dir.glob("blah/**/*.rb").reject { |f| stupid_file(f) }
+  #  MagicLoader.require_all Dir.glob("blah/**/*.rb").reject { |f| stupid_file(f) }
   # 
   # Or if you want, just list the files directly as arguments:
   #
-  #  require_all 'lib/a.rb', 'lib/b.rb', 'lib/c.rb', 'lib/d.rb'
+  #  MagicLoader.require_all 'lib/a.rb', 'lib/b.rb', 'lib/c.rb', 'lib/d.rb'
   #
   def self.require_all(*args)
     # Handle passing an array as an argument

@@ -10,7 +10,7 @@ automagically load regardless of the dependency structure?
 
 Wouldn't that be nice?  Well, now you can!
 
- <code>require 'magic_loader_'</code>
+ <code>require 'magic_loader'</code>
 
 You can use MagicLoader in a multitude of different ways.
 

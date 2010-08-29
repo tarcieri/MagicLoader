@@ -1,10 +1,10 @@
 #--
-# Copyright (C)2009 Tony Arcieri
+# Copyright (C)2009-10 Tony Arcieri
 # You can redistribute this under the terms of the MIT license
 # See file LICENSE for details
 #++
 
-module RequireAll
+module MagicLoader
   # A wonderfully simple way to load your code.
   #
   # The easiest way to use require_all is to just point it at a directory
@@ -24,14 +24,14 @@ module RequireAll
   #  require_all 'lib/**/*.rb'
   #
   # It will also accept an array of files:
-  #
+  # 
   #  require_all Dir.glob("blah/**/*.rb").reject { |f| stupid_file(f) }
   # 
   # Or if you want, just list the files directly as arguments:
   #
   #  require_all 'lib/a.rb', 'lib/b.rb', 'lib/c.rb', 'lib/d.rb'
   #
-  def require_all(*args)
+  def self.require_all(*args)
     # Handle passing an array as an argument
     args.flatten!
     
@@ -75,9 +75,12 @@ module RequireAll
     # If there's nothing to load, you're doing it wrong!
     raise LoadError, "no files to load" if files.empty?
     
-    files.map! { |file| File.expand_path file }
+    # Sort input files to give semi-deterministic results
     files.sort!
-            
+    
+    # Store load order as it's calculated
+    load_order = []
+    
     begin
       failed = []
       first_name_error = nil
@@ -89,6 +92,7 @@ module RequireAll
       files.each do |file|
         begin
           require file
+          load_order << file
         rescue NameError => ex
           failed << file
           first_name_error ||= ex
@@ -121,20 +125,6 @@ module RequireAll
       end
     end until failed.empty?
     
-    true
-  end
-  
-  # Works like require_all, but paths are relative to the caller rather than 
-  # the current working directory
-  def require_rel(*paths)
-    # Handle passing an array as an argument
-    paths.flatten!
-    
-    source_directory = File.dirname caller.first.sub(/:\d+$/, '')
-    paths.each do |path|
-      require_all File.join(source_directory, path)
-    end
+    load_order
   end
 end
-
-include RequireAll

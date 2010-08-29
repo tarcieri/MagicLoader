@@ -61,12 +61,12 @@ Methodology
 I didn't invent the approach this gem uses.  It was shamelessly stolen from
 Merb (which apparently stole it from elsewhere).  Here's how it works:  
 
-# Enumerate the files to be loaded
-# Try to load all of the files.  If we encounter a NameError loading a 
+* Enumerate the files to be loaded
+* Try to load all of the files.  If we encounter a NameError loading a 
   particular file, store that file in a "try to load it later" list.
-# If all the files loaded, great, we're done!  If not, go through the
+* If all the files loaded, great, we're done!  If not, go through the
   "try to load it later" list again rescuing NameErrors the same way.
-# If we walk the whole "try to load it later" list and it doesn't shrink
+* If we walk the whole "try to load it later" list and it doesn't shrink
   at all, we've encountered an unresolvable dependency.  In this case,
   require_all will rethrow the first NameError it encountered.
 

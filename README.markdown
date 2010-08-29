@@ -1,4 +1,5 @@
-h1. require_all
+MagicLoader
+===========
 
 A wonderfully simple way to load your code.
 
@@ -54,7 +55,8 @@ automagic dependency handling.
  
 It's just that easy!  Code loading shouldn't be hard.
 
-h2. Methodology
+Methodology
+-----------
 
 I didn't invent the approach this gem uses.  It was shamelessly stolen from
 Merb (which apparently stole it from elsewhere).  Here's how it works:  
@@ -68,7 +70,8 @@ Merb (which apparently stole it from elsewhere).  Here's how it works:
   at all, we've encountered an unresolvable dependency.  In this case,
   require_all will rethrow the first NameError it encountered.
 
-h2. Questions? Comments? Concerns?
+Questions? Comments? Concerns?
+------------------------------
 
 You can reach the author on github or freenode: "tarcieri"
 
@@ -78,6 +81,7 @@ Got issues with require_all to report?  Post 'em here:
 
 "Github Tracker":http://github.com/tarcieri/require_all/issues
 
-h2. License
+License
+-------
 
 MIT (see the LICENSE file for details)

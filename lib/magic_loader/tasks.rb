@@ -1,3 +1,9 @@
+#--
+# Copyright (C)2010 Tony Arcieri
+# You can redistribute this under the terms of the MIT license
+# See file LICENSE for details
+#++
+
 require 'magic_loader'
 require 'rake/tasklib'
 
@@ -37,6 +43,10 @@ class MagicLoader::Task < Rake::TaskLib
       end
     end
   end
+  
+  #######
+  private
+  #######
   
   # Implement the path stripping logic described in the README
   def strip_paths!(paths, to_strip)

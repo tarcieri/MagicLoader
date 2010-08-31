@@ -40,8 +40,7 @@ class MagicLoader::Task < Rake::TaskLib
         end
       when Regexp
         path.sub to_strip, ''
-      else
-        path
+      else raise ArgumentError, ":strip given a #{to_strip.class}"
       end
     end
   end

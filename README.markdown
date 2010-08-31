@@ -69,6 +69,8 @@ MagicLoader Magic Block.
 Now, let's dig into the rest of the options hash. You might be able to guess
 what the options do already, but if you can't, here's some help:
 
+* __target__: output file to annotate. See above.
+
 * __strip__: remove the given leading string from all of the output paths written
   to the target file. Optionally, you can give an arbitrary regular 
   expression, and whatever it matches will be removed from the string.

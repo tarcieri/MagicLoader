@@ -1,6 +1,7 @@
 require 'magic_loader'
 require 'rake/tasklib'
 
+# Generates the MagicLoader rake task, which 
 class MagicLoader::Task < Rake::TaskLib
   BEGIN_MAGIC = "#-----BEGIN MAGICLOADER MAGIC BLOCK-----"
   END_MAGIC   = "#------END MAGICLOADER MAGIC BLOCK------"
@@ -11,8 +12,9 @@ class MagicLoader::Task < Rake::TaskLib
   
   def initialize(*paths)
     options = paths.last.is_a?(Hash) ? paths.pop : {}
+    name = options[:name] || 'magicload'
     
-    task :magicload do
+    task name do
       load_order = MagicLoader.require_all(*paths)
       strip_paths!(load_order, options[:strip]) if options[:strip]
 
@@ -23,12 +25,19 @@ class MagicLoader::Task < Rake::TaskLib
         END_MAGIC
       ].flatten.join("\n")
       
-      unless options[:target]
+      if options[:target]
+        if File.exists? options[:target]
+          annotate_file options[:target], magicload_block
+        else
+          File.open(options[:target], "w") { |f| f << magicload_block }
+        end
+      else
         puts magicload_block
       end
     end
   end
   
+  # Implement the path stripping logic described in the README
   def strip_paths!(paths, to_strip)
     paths.map! do |path|
       case to_strip

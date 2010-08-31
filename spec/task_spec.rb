@@ -9,8 +9,10 @@ describe MagicLoader::Task do
     @prefix  = File.dirname(__FILE__) + '/fixtures/'
     @sources = @prefix + 'resolvable'
     @output  = File.expand_path('../tmp/example.rb', __FILE__)
-    
-    rm_f @output
+  end
+  
+  before :each do
+    rm @output if File.exists? @output
   end
   
   it "prints to standard output unless a :target is specified" do
@@ -29,6 +31,22 @@ describe MagicLoader::Task do
       
     Rake::Task['magicload2'].invoke
     
+    File.exists?(@output).should be_true
+  end
+  
+  it "annotates files that do exist" do
+    File.exists?(@output).should be_false
+    
+    important_crap = "# OMFG IMPORTANT CRAP DON'T DELETE THIS"
+    File.open(@output, 'w') { |f| f << important_crap }
+    
+    MagicLoader::Task.new @sources,
+      :target => @output,
+      :strip  => @prefix,
+      :name   => 'magicload3'
+      
+    Rake::Task['magicload3'].invoke
+
     File.exists?(@output).should be_true
   end
 end

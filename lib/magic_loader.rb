@@ -4,6 +4,8 @@
 # See file LICENSE for details
 #++
 
+# MagicLoader: painless code dependency management
+# For more information, see http://github.com/tarcieri/MagicLoader
 module MagicLoader
   # A wonderfully simple way to load your code.
   #

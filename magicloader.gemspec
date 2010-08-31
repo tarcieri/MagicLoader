@@ -19,6 +19,6 @@ EOD
 
   # RDoc settings
   s.has_rdoc = true
-  s.rdoc_options = %w(--title MagicLoader --main README.textile --line-numbers)
+  s.rdoc_options = %w(--title MagicLoader --main README.markdown --line-numbers)
   s.extra_rdoc_files = ["LICENSE", "README.markdown", "CHANGES"]
 end

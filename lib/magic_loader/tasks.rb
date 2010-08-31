@@ -14,24 +14,8 @@ class MagicLoader::Task < Rake::TaskLib
     
     task :magicload do
       load_order = MagicLoader.require_all(*paths)
-      
-      if options[:strip]
-        load_order.map! do |path|
-          case options[:strip]
-          when String
-            if path.index(options[:strip]) == 0
-              path.sub options[:strip], ''
-            else
-              path
-            end
-          when Regexp
-            path.sub options[:strip], ''
-          else
-            path
-          end
-        end
-      end
-      
+      strip_paths!(load_order, options[:strip]) if options[:strip]
+
       magicload_block = [
         BEGIN_MAGIC,
         MAGIC_WARNING,
@@ -39,7 +23,26 @@ class MagicLoader::Task < Rake::TaskLib
         END_MAGIC
       ].flatten.join("\n")
       
-      puts magicload_block
+      unless options[:target]
+        puts magicload_block
+      end
+    end
+  end
+  
+  def strip_paths!(paths, to_strip)
+    paths.map! do |path|
+      case to_strip
+      when String
+        if path.index(to_strip) == 0
+          path.sub to_strip, ''
+        else
+          path
+        end
+      when Regexp
+        path.sub to_strip, ''
+      else
+        path
+      end
     end
   end
 end

@@ -59,5 +59,17 @@ describe MagicLoader::Task do
     
     important_crap << "\n\n" << fake_magic_block
     File.open(@output, 'w') { |f| f << important_crap }
+    
+    MagicLoader::Task.new @sources,
+      :target => @output,
+      :strip  => @prefix,
+      :name   => 'magicload4'
+      
+    Rake::Task['magicload4'].invoke
+    
+    File.exists?(@output).should be_true
+    data = File.read @output
+    data["omgfake"].should be_nil
+    data[MagicLoader::MAGIC_REGEXP].should be_an_instance_of(String)
   end
 end

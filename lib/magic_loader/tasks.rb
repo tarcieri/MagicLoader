@@ -12,15 +12,16 @@ class MagicLoader::Task < Rake::TaskLib
   
   def initialize(*paths)
     options = paths.last.is_a?(Hash) ? paths.pop : {}
-    name = options[:name] || 'magicload'
+    task_name = options[:name] || 'magicload'
     
-    task name do
+    task task_name do
       load_order = MagicLoader.require_all(*paths)
       strip_paths!(load_order, options[:strip]) if options[:strip]
 
       magicload_block = [
         BEGIN_MAGIC,
         MAGIC_WARNING,
+        "# Run \"rake #{task_name}\" to regenerate",
         load_order.map { |t| "require #{t.dump}" },
         END_MAGIC
       ].flatten.join("\n")

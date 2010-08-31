@@ -7,8 +7,8 @@
 require 'magic_loader'
 require 'rake/tasklib'
 
-# Generates the MagicLoader rake task, which 
-class MagicLoader::Task < Rake::TaskLib
+# Generates the MagicLoader rake task
+module MagicLoader
   BEGIN_MAGIC = "#-----BEGIN MAGICLOADER MAGIC BLOCK-----"
   END_MAGIC   = "#------END MAGICLOADER MAGIC BLOCK------"
   MAGIC_WARNING = [
@@ -17,66 +17,69 @@ class MagicLoader::Task < Rake::TaskLib
   ]
   MAGIC_REGEXP = /#{BEGIN_MAGIC}.*#{END_MAGIC}/
   
-  def initialize(*paths)
-    options = paths.last.is_a?(Hash) ? paths.pop : {}
-    task_name = options[:name] || 'magicload'
+  # Generates the MagicLoader rake task
+  class Task < Rake::TaskLib
+    def initialize(*paths)
+      options = paths.last.is_a?(Hash) ? paths.pop : {}
+      task_name = options[:name] || 'magicload'
     
-    task task_name do
-      load_order = MagicLoader.require_all(*paths)
-      strip_paths!(load_order, options[:strip]) if options[:strip]
+      task task_name do
+        load_order = MagicLoader.require_all(*paths)
+        strip_paths!(load_order, options[:strip]) if options[:strip]
 
-      magic_block = [
-        BEGIN_MAGIC,
-        MAGIC_WARNING,
-        "# Run \"rake #{task_name}\" to regenerate",
-        load_order.map { |t| "require #{t.dump}" },
-        END_MAGIC
-      ].flatten.join("\n")
+        magic_block = [
+          BEGIN_MAGIC,
+          MAGIC_WARNING,
+          "# Run \"rake #{task_name}\" to regenerate",
+          load_order.map { |t| "require #{t.dump}" },
+          END_MAGIC
+        ].flatten.join("\n")
       
-      if options[:target]
-        if File.exists? options[:target]
-          annotate_file options[:target], magic_block
+        if options[:target]
+          if File.exists? options[:target]
+            annotate_file options[:target], magic_block
+          else
+            File.open(options[:target], "w") { |f| f << magic_block }
+          end
         else
-          File.open(options[:target], "w") { |f| f << magic_block }
+          puts magic_block
         end
-      else
-        puts magic_block
       end
     end
-  end
   
-  #######
-  private
-  #######
+    #######
+    private
+    #######
   
-  # Implement the path stripping logic described in the README
-  def strip_paths!(paths, to_strip)
-    paths.map! do |path|
-      case to_strip
-      when String
-        if path.index(to_strip) == 0
+    # Implement the path stripping logic described in the README
+    def strip_paths!(paths, to_strip)
+      paths.map! do |path|
+        case to_strip
+        when String
+          if path.index(to_strip) == 0
+            path.sub to_strip, ''
+          else
+            path
+          end
+        when Regexp
           path.sub to_strip, ''
-        else
-          path
+        else raise ArgumentError, ":strip given a #{to_strip.class}"
         end
-      when Regexp
-        path.sub to_strip, ''
-      else raise ArgumentError, ":strip given a #{to_strip.class}"
       end
     end
-  end
   
-  # Annotate a MagicLoader Magic Block onto the end of an existing file
-  def annotate_file(path, magic_block)
-    data = File.read path
-    magic_matches = data.match(MAGIC_REGEXP)
-    case magic_matches
-    when MatchData
-      raise "Sorry, I don't know how to annotate a file that already has a magic block"
-    else
-      data << "\n\n" << magic_block
-    end
+    # Annotate a MagicLoader Magic Block onto the end of an existing file
+    def annotate_file(path, magic_block)
+      data = File.read path
+      magic_matches = data.match(MAGIC_REGEXP)
+      case magic_matches
+      when MatchData
+        raise "Sorry, I don't know how to annotate a file that already has a magic block"
+      else
+        data << "\n\n" << magic_block
+      end
     
-    File.open(path, 'w') { |f| f << data }
+      File.open(path, 'w') { |f| f << data }
+    end
   end
 end

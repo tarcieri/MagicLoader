@@ -13,6 +13,7 @@ describe MagicLoader::Task do
   
   before :each do
     rm @output if File.exists? @output
+    File.exists?(@output).should be_false
   end
   
   it "prints to standard output unless a :target is specified" do
@@ -22,8 +23,6 @@ describe MagicLoader::Task do
   end
   
   it "creates new files if they don't exist" do
-    File.exists?(@output).should be_false
-    
     MagicLoader::Task.new @sources,
       :target => @output,
       :strip  => @prefix,
@@ -35,8 +34,6 @@ describe MagicLoader::Task do
   end
   
   it "annotates files that do exist" do
-    File.exists?(@output).should be_false
-    
     important_crap = "# OMFG IMPORTANT CRAP DON'T DELETE THIS"
     File.open(@output, 'w') { |f| f << important_crap }
     
@@ -48,5 +45,19 @@ describe MagicLoader::Task do
     Rake::Task['magicload3'].invoke
 
     File.exists?(@output).should be_true
+    data = File.read @output
+    data[important_crap].should be_an_instance_of(String)
+  end
+  
+  it "annotates files that do exist and already have magic blocks" do
+    important_crap = "# OMFG IMPORTANT CRAP DON'T DELETE THIS"
+    fake_magic_block = [
+      MagicLoader::BEGIN_MAGIC,
+      "# omgfake!",
+      MagicLoader::END_MAGIC
+    ].join("\n")
+    
+    important_crap << "\n\n" << fake_magic_block
+    File.open(@output, 'w') { |f| f << important_crap }
   end
 end

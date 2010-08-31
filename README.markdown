@@ -139,7 +139,7 @@ Questions? Comments? Concerns?
 
 You can reach the author on github or freenode: "tarcieri"
 
-Or by email: [bascule@gmail.com](mailto:bascule@gmail.com)
+or on Twitter: @bascule or email: [bascule@gmail.com](mailto:bascule@gmail.com)
 
 Got issues with require_all to report?  Post 'em here:
 

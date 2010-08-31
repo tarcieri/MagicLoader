@@ -1,12 +1,8 @@
 MagicLoader
 ===========
 
-Painless code dependency management.
-
-Tired of futzing around with require statements everywhere, littering your code
-with <code>require File.dirname(__FILE__)</code> crap?  What if you could just 
-point something at a big directory full of code and have everything just 
-automagically load regardless of the dependency structure?  
+What if you could just point something at a big directory full of code and have
+everything just automagically load regardless of the dependency structure?
 
 Wouldn't that be nice?  Well, now you can!
 

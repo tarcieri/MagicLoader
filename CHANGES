@@ -1,13 +1,5 @@
-1.1.0:
-
-* Add require_rel (require_all relative to the current file)
-* Fix bug in auto-appending .rb ala require
-
-1.0.1:
-
-* Allow require_all to take a directory name as an argument
-
 1.0.0:
 
-* Initial release (was originally load_glob, converted to require_all which is
-  a lot cooler, seriously trust me)
+* Initial release (was originally require_all, converted to MagicLoader which 
+  is a lot cooler, seriously trust me. And let's forget I said that the last
+  time, if anyone wants to dig through require_all's CHANGES)

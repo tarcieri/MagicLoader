@@ -1,4 +1,4 @@
-require File.expand_path('../../lib/magic_loader.rb', __FILE__)
+require File.expand_path('../spec_helper.rb', __FILE__)
 
 describe MagicLoader do
   describe :require_all do

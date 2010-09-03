@@ -7,7 +7,7 @@ GEMSPEC = Gem::Specification.new do |s|
 Painless code dependency management. Think Bundler, but for managing file load
 ordering dependencies.
 EOD
-  s.version = "0.9.0"
+  s.version = "0.9.1"
   s.authors = "Tony Arcieri"
   s.email = "bascule@gmail.com"
   s.homepage = "http://github.com/tarcieri/MagicLoader"

@@ -71,15 +71,22 @@ what the options do already, but if you can't, here's some help:
 
 * __target__: output file to annotate. See above.
 
-* __strip__: remove the given leading string from all of the output paths written
-  to the target file. Optionally, you can give an arbitrary regular 
+* __strip__: remove the given leading string from all of the output paths 
+  written to the target file. Optionally, you can give an arbitrary regular 
   expression, and whatever it matches will be removed from the string.
   This is good if you have a leading directory prefix you want to remove
   from the generated output files.
   
-* __name__: the name of the Rake task to define. It defaults to "magicload" if you
-  don't specify it yourself, so specifying it explicitly as "magicload" is a
-  bit redundant. Otherwise, you can set it to whatever you want.
+* __name__: the name of the Rake task to define. It defaults to "magicload" if
+  you don't specify it yourself, so specifying it explicitly as "magicload" is
+  a bit redundant. Otherwise, you can set it to whatever you want.
+  
+* __clean__: true or false boolean. The "clean" option is especially useful if
+  your target file is included in the Rake environment. If this happens, it 
+  will distrupt MagicLoader's typical operation. Setting :clean => true will
+  remove previous MagicLoader directives from the target file before
+  attempting to regenerate them, affording you a pristine environment in which
+  to compute your code dependencies.
 
 The wonderful require_all method
 --------------------------------

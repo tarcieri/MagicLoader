@@ -19,10 +19,18 @@ module MagicLoader
   
   # Generates the MagicLoader rake task
   class Task < Rake::TaskLib
+    # FIXME: Yeah all this functionality really shouldn't be part of the Rake
+    # task. It should be all nicely factored into a reusable class with all
+    # the core functionality exposed, then wrapped in a Rake task. But I'm
+    # lazy and just trying to get this thing out the door, and Rake tasks
+    # are my main use case. Got a problem? Refactor me!
+    
+    # Please see the README for how to use this task
     def initialize(*paths)
       options = paths.last.is_a?(Hash) ? paths.pop : {}
       task_name = options[:name] || 'magicload'
     
+      desc "Automagically calculate code dependencies"
       task task_name do
         load_order = MagicLoader.require_all(*paths)
         strip_paths!(load_order, options[:strip]) if options[:strip]
@@ -44,6 +52,17 @@ module MagicLoader
         else
           puts magic_block
         end
+      end
+      
+      if options[:clean]
+        namespace task_name do
+          desc "Remove the previous MagicLoader block"
+          task :clean do
+            strip_magic_block options[:target]
+          end
+        end
+        
+        Rake::Task[task_name].prerequisites << "#{task_name}:clean"
       end
     end
   
@@ -71,6 +90,10 @@ module MagicLoader
     # Annotate a MagicLoader Magic Block onto the end of an existing file
     def annotate_file(path, magic_block)
       data = File.read path
+      
+      # Remove trailing whitespace from the file so it doesn't grow
+      data.sub!(/\w+$/m, '')
+      
       magic_matches = data.match(MAGIC_REGEXP)
       case magic_matches
       when MatchData
@@ -79,6 +102,13 @@ module MagicLoader
         data << "\n\n" << magic_block
       end
     
+      File.open(path, 'w') { |f| f << data }
+    end
+    
+    # Remove the MagicLoader block from a particular file
+    def strip_magic_block(file)
+      data = File.read path
+      data.sub(MAGIC_REGEXP, '')
       File.open(path, 'w') { |f| f << data }
     end
   end

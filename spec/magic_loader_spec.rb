@@ -17,6 +17,14 @@ describe MagicLoader do
           MagicLoader.require_all File.expand_path('../fixtures/unresolvable/*.rb', __FILE__)
         end.should raise_error(NameError)
       end
+      
+      it "cleans up after constants if dependencies can't be resolved" do
+        proc do
+          MagicLoader.require_all File.expand_path('../fixtures/circular/*.rb', __FILE__)
+        end.should raise_error(NameError)
+        
+        defined?(Outer).should be_false
+      end
     end
   
     describe "syntactic sugar" do

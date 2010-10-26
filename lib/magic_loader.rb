@@ -92,10 +92,15 @@ module MagicLoader
       # previously caused NameErrors until they've all been loaded or no new
       # files can be loaded, indicating unresolvable dependencies.
       files.each do |file|
+        original_constants = Module.constants
+        
         begin
           require file
           load_order << file
         rescue NameError => ex
+          new_constants = Module.constants - original_constants
+          new_constants.each { |name| Object.send(:remove_const, name) }
+          
           failed << file
           first_name_error ||= ex
         end

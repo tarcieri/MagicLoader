@@ -136,6 +136,34 @@ Here's how it works:
 * If we walk the whole "try to load it later" list and it doesn't shrink
   at all, we've encountered an unresolvable dependency.  In this case,
   require_all will rethrow the first NameError it encountered.
+  
+TODO
+----
+
+MagicLoader presently doesn't load your code under pristine conditions. It
+runs as a Rake task and thus brings with it everything which is already
+loaded in your Rake environment. You may very well be pulling in the MagicLoad
+target in your Rake environment ahead of time, which can break all sorts of
+things.
+
+To really be effective, MagicLoader needs a completely clean environment. The
+easiest way to implement this is to have a separate "magicload" script
+distributed with the gem that spawns a new, fresh Ruby interpreter and loads
+all your code there.
+
+In order for this to work effectively, MagicLoader needs some way of knowing
+all of the gem dependencies that need to get loaded before it attempts to load
+the given set of code. This requires at least one of two things (or preferably,
+support for both):
+
+* A way to specify a list of gem dependencies to be loaded when
+  MagicLoader::Task.new is invoked.
+  
+* An interface to Bundler to pull in your project's bundled Gem dependencies
+  which you can pass to MagicLoader::Task.new.
+  
+This remains the one unsolved problem preventing a MagicLoader 1.0.0 release.
+Pull requests for this sort of functionality are welcomed!
 
 Questions? Comments? Concerns?
 ------------------------------

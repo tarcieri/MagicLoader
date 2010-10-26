@@ -92,7 +92,7 @@ module MagicLoader
       data = File.read path
       
       # Remove trailing whitespace from the file so it doesn't grow
-      data.sub!(/\w+$/m, '')
+      data.sub!(/\s+$/m, '')
       
       magic_matches = data.match(MAGIC_REGEXP)
       case magic_matches
